@@ -1,59 +1,32 @@
 #!/bin/bash
-c=$'\n'
-
-
-#-------------TODO---------------
-
-#- changing priorities / Done
-
-#- Remove priorities from beginnings
-
-#- sort before saving
-
-
-
-#- sorting technique
-#		take first char sort and then fill the sorted list with other strings
-
-#echo ${var:0:2} to extract 2 first two letters
-# string equality "=="
-
-
-#--------------------------------
-
-
-
+c=$'\n' #for future uses in printing nextline character
 #Reading the notes from a file, and creating when no file is there---
-
-fx="xQr65_2.txt"
-
+fx=".StickyxQr65_2.txt"
 if [ -e "$fx" ]
 then
 	readarray sticky < $fx
 else
 	touch xQr65_2.txt
 fi
-
 #----------------------------------------------------------------------
-
-#Displaying list of sticky notes--------------------------------------
+#Displaying list of sticky notes---------------------------------------
 echo ""
-
-#Method to print notes
+#Method to print notes-
 printit(){
 for i in "${!sticky[@]}"
 do
-        printf "%s %s" "$i" "${sticky[$i]}"
+				lo=${sticky[$i]}
+				lp=${lo:1}
+        printf "%s %s" "$i" "$lp"
 done
 }
-
 printit
+#----------------------------------------------------------------------
+#text based user interface---------------------------------------------
 echo "-----------------------------------------------------------------"
 echo "'a' (add)  |  'r' (remove)  |  's' (increase priority) | 'e' exit"
 echo "-----------------------------------------------------------------"
-
 read -p "Enter command from above..." input
-
 #Wrong inputnumber------------------------------------------------------------
 if [ "$input" != "a" ] && [ "$input" != "r" ] && [ "$input" != "s" ] && [ "$input" != "e" ]
 then
@@ -68,42 +41,32 @@ elif [ $rd -eq 3 ]
 then
 printf "Srsly?! $c Its an Invalid Command $c"
 else
-
 printf "Invalid Command, This shows you are not a good person! $c And YES I am judging you and you cannot do anything!$c"
 fi
 fi
-
-
-#Exit condition------------------------------------------------
-
+#----------------------------------------------------------------------
+#Exit condition--------------------------------------------------------
 if [ "$input" == "e" ]
 then
   echo "Say Please!, I am not your servant!... $c Actually... I am, Bye!"
 	exit
 fi
-
-
-#Script operations
-
+#----------------------------------------------------------------------
+#Script operations-----------------------------------------------------
 jk=0 #to sort and save file
-
-# user wants to remove a note
+# user wants to remove a note-------------r
 if [ "$input" == "r" ]
 then
-	read -p "write the number before the sticky note to remove.." stre
+	read -p "write the number before the sticky note to remove..$c" stre
 	unset sticky[$stre]
 	printit
 	jk=1
 fi
-
-#if user wants to reprioritize a note
+#if user wants to reprioritize a note-----p
 if [ "$input" == "s" ]
 then
-
 	read -p "write the number before the sticky note to change its priority...$c" pn
-	echo "${sticky[$pn]}"
 	read -p "Set priority of note (0-9)$c" pr
-
 	# set character on to 'pr'
 	lng=${#sticky[@]} #length
 	il=${sticky[$pn]} #actual item
@@ -111,13 +74,10 @@ then
 	sticky[$pn]="$pr$ttp"	#setting new priority
 	printit
 	jk=1
-
 fi
-
-#if user wants to add new note
+#if user wants to add new note-----------a
 if [ "$input" == "a" ]
 then
-
 	read -p "Write note in a line...[limit: 50 characters] $c" ll
 	l="${#ll}"
 	if [ $l -gt 50 ]
@@ -129,22 +89,20 @@ then
 		then
 			p=9
 		fi
-		addit="$p $ll"
+		addit="$p$ll"
 		sticky+=("$addit")
 	fi
 	printit
 	echo ""
 	jk=1
-
 fi
-#
-# if [ "$jk" -eq 1 ]
-# then
-# 	echo "saving... Done"
-#
-#
-#
-# 	temp=()
-# 	printf "%s" "${temp[@]}" > xQr65_2.txt
-# 	#save after sorting
-# fi
+#----------------------------------------------------------------------
+#saving after sorting--------------------------------------------------
+if [ "$jk" -eq 1 ]
+then
+	echo "saving... Done"
+	sorted=($(printf '%s\n' "${sticky[@]}" | sort))
+printf "%s\n" "${sorted[@]}" > .StickyxQr65_2.txt
+fi
+echo "...................Bye Now!" #exit line
+#---------------------------------------------------------------------
