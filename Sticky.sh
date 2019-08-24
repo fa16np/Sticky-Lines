@@ -1,9 +1,5 @@
 #!/bin/bash
 #-----------------------
-#bugs
-# printing even if empty
-
-
 c=$'\n' #for future uses in printing nextline character
 #Reading the notes from a file, and creating when no file is there---
 fx=".StickyxQr65_2.txt"
