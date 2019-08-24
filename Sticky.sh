@@ -1,4 +1,9 @@
 #!/bin/bash
+#-----------------------
+#bugs
+# printing even if empty
+
+
 c=$'\n' #for future uses in printing nextline character
 #Reading the notes from a file, and creating when no file is there---
 fx=".StickyxQr65_2.txt"
@@ -6,7 +11,7 @@ if [ -e "$fx" ]
 then
 	readarray sticky < $fx
 else
-	touch xQr65_2.txt
+	touch .StickyxQr65_2.txt
 fi
 #----------------------------------------------------------------------
 #Displaying list of sticky notes---------------------------------------
@@ -78,6 +83,8 @@ fi
 #if user wants to add new note-----------a
 if [ "$input" == "a" ]
 then
+	OIFS=$IFS
+  IFS=$'\n'
 	read -p "Write note in a line...[limit: 50 characters] $c" ll
 	l="${#ll}"
 	if [ $l -gt 50 ]
@@ -95,14 +102,18 @@ then
 	printit
 	echo ""
 	jk=1
+	  IFS=OIFS
 fi
 #----------------------------------------------------------------------
 #saving after sorting--------------------------------------------------
 if [ "$jk" -eq 1 ]
 then
+	OIFS=$IFS
+  IFS=$'\n'
 	echo "saving... Done"
 	sorted=($(printf '%s\n' "${sticky[@]}" | sort))
 printf "%s\n" "${sorted[@]}" > .StickyxQr65_2.txt
+IFS=OIFS
 fi
 echo "...................Bye Now!" #exit line
 #---------------------------------------------------------------------
